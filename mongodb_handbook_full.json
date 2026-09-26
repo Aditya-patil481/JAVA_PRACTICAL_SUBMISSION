@@ -1,0 +1,167 @@
+{
+  "database": "ecommerce",
+  "collections": {
+    "products": [
+      {
+        "_id": "PROD001",
+        "name": "Wireless Mouse",
+        "price": 899,
+        "category": "Electronics",
+        "stock": 130,
+        "rating": 4.5,
+        "tags": [
+          "computer",
+          "accessory",
+          "wireless",
+          "new"
+        ]
+      },
+      {
+        "_id": "PROD002",
+        "name": "Mechanical Keyboard",
+        "price": 2499,
+        "category": "Electronics",
+        "stock": 90,
+        "rating": 4.8,
+        "tags": [
+          "keyboard",
+          "mechanical"
+        ]
+      },
+      {
+        "_id": "PROD003",
+        "name": "Gaming Laptop",
+        "price": 85999,
+        "category": "Computers",
+        "stock": 30,
+        "rating": 4.6,
+        "tags": [
+          "gaming",
+          "laptop"
+        ]
+      }
+    ],
+    "orders": [
+      {
+        "_id": "ORD002",
+        "customer": "Jane Smith",
+        "products": [
+          {
+            "name": "Gaming Laptop",
+            "quantity": 1
+          }
+        ],
+        "total": 85999,
+        "status": "Pending"
+      }
+    ],
+    "contacts": [
+      {
+        "_id": "CONTACT002",
+        "name": "Bob",
+        "message": "Need help with my order",
+        "phone": "9876543211"
+      },
+      {
+        "_id": "CONTACT003",
+        "name": "Carol",
+        "message": "Product inquiry",
+        "phone": "9876543212"
+      }
+    ],
+    "sales": [
+      {
+        "_id": 1,
+        "item": "Apple",
+        "price": 10,
+        "quantity": 5,
+        "category": "Fruit"
+      },
+      {
+        "_id": 2,
+        "item": "Banana",
+        "price": 5,
+        "quantity": 10,
+        "category": "Fruit"
+      },
+      {
+        "_id": 3,
+        "item": "Carrot",
+        "price": 8,
+        "quantity": 6,
+        "category": "Vegetable"
+      },
+      {
+        "_id": 4,
+        "item": "Tomato",
+        "price": 6,
+        "quantity": 8,
+        "category": "Vegetable"
+      },
+      {
+        "_id": 5,
+        "item": "Mango",
+        "price": 15,
+        "quantity": 3,
+        "category": "Fruit"
+      }
+    ]
+  },
+  "operations": {
+    "database": [
+      "show dbs",
+      "use ecommerce",
+      "show collections",
+      "db.dropDatabase()"
+    ],
+    "products_queries": [
+      "db.products.find()",
+      "db.products.find().pretty()",
+      "db.products.find({ category: \"Electronics\" })",
+      "db.products.find({ price: { $gt: 1000 } })",
+      "db.products.find({ price: { $gte: 1000, $lte: 50000 } })",
+      "db.products.find({ $or: [{ category: \"Electronics\" }, { stock: { $lt: 50 } }] })",
+      "db.products.find({}, { name: 1, price: 1, _id: 0 })",
+      "db.products.find().sort({ price: -1 }).limit(2)",
+      "db.products.updateOne({ name: \"Wireless Mouse\" }, { $set: { price: 899 } })",
+      "db.products.updateMany({ category: \"Electronics\" }, { $inc: { stock: 10 } })",
+      "db.products.updateOne({ name: \"Wireless Mouse\" }, { $push: { tags: \"new\" } })",
+      "db.products.createIndex({ name: 1 })",
+      "db.products.getIndexes()",
+      "db.products.find({ price: { $gt: 5000 } }).explain(\"executionStats\")",
+      "db.products.renameCollection(\"items\")",
+      "db.products.drop()"
+    ],
+    "orders_queries": [
+      "db.orders.find()",
+      "db.orders.deleteMany({ status: \"Delivered\" })",
+      "db.orders.aggregate([{ $group: { _id: null, totalRevenue: { $sum: \"$total\" } } }])",
+      "db.orders.aggregate([{ $group: { _id: \"$status\", count: { $sum: 1 } } }])",
+      "db.orders.aggregate([{ $lookup: { from: \"products\", localField: \"products.name\", foreignField: \"name\", as: \"productDetails\" } }])"
+    ],
+    "contacts_queries": [
+      "db.contacts.find()",
+      "db.contacts.deleteOne({ name: \"Alice\" })"
+    ],
+    "sales_queries": [
+      "db.sales.find()",
+      "db.sales.aggregate([{ $match: { category: \"Fruit\" } }])",
+      "db.sales.aggregate([{ $project: { item: 1, price: 1, _id: 0 } }])",
+      "db.sales.aggregate([{ $group: { _id: \"$category\", totalSales: { $sum: { $multiply: [\"$price\", \"$quantity\"] } } } }])",
+      "db.sales.aggregate([{ $group: { _id: \"$category\", totalSales: { $sum: { $multiply: [\"$price\", \"$quantity\"] } } } }, { $sort: { totalSales: -1 } }])",
+      "db.sales.aggregate([{ $match: { category: \"Fruit\" } }, { $group: { _id: null, totalFruitSales: { $sum: { $multiply: [\"$price\", \"$quantity\"] } } } }])"
+    ],
+    "admin_queries": [
+      "db.stats()",
+      "db.serverStatus()",
+      "db.products.countDocuments()",
+      "db.products.createIndex({ name: 1 })",
+      "db.products.getIndexes()"
+    ]
+  },
+  "aggregation_results": {
+    "Fruit": 145,
+    "Vegetable": 96,
+    "totalFruitSales": 145
+  }
+}
